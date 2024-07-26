@@ -1,1 +1,20 @@
 이론 필기 노트
+
+앵커 태그
+하이퍼텍스트 : 사용자의 선택에 따라 특정 정보로 이동하는 조직된 문서
+a 태그(Anchor) : 다른 웹 페이지나 웹 페이지 내부의 특정 위치로 이동
+Href : Hyper Reference를 의미
+
+a 태그의 href 속성
+1 절대 경로
+       http ://naver.com - 네이버의 메인 페이지
+       /animal.jpg - 현재 웹 사이트 최상위 위치의 animal.jpg 파일
+2 상대 경로
+       animal.jpg - 웹 페이지가 있는 폴더의 animal.jpg 파일
+       image/animal.jpg - 웹 페이지가 있는 폴더에 포함된 image 폴더의 animal.jpg 파일
+       ../animal.jpg - 웹 페이지가 있는 폴더의 상위 폴더에 있는 animal.jpg 파일
+3 아이디 경로
+       #name - id 속성이 name인 태그의 위치로 이동
+4 메일 경로
+       mailto : hanb@hanbit.co.kr – 해당 주소로 메일 전송
+
