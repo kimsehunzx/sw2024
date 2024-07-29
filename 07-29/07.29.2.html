@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload=function(){
+            var memoTxt = document.getElementById('memoTxt');
+            //querySelector('')은 CSS의 선택기(selecor)를 그대로 사용 가능.
+            //id 는 #으로 시작
+            //class는 .으로 시작
+            //속성은 []로 구분해서 사용.
+            // 태그는 그냥 태그 이름으로
+            var demo = document.querySelector('#demo');
+            var clickBtn = document.querySelector('#clickBtn');
+            var resetBtn = document.querySelector('#resetBtn');
+
+            //TDD : 테스트 주도 
+            console.log(memoTxt,demo,resetBtn);
+
+            // 이벤트 핸들러 만들기
+            clickBtn.addEventListener('click', function() {
+                console.log('버튼 클릭 했다!'); //버튼 클릭 확인
+                demo.textContent = memoTxt.value;
+            });
+
+            resetBtn.addEventListener('click', function() {
+                demo.textContent = "JavaScript can change HTML content.";
+                memoTxt.value = "";
+            });
+        }
+    </script>
+
+
+    <body>
+        메모: <input type="text" id="memoTxt">
+    
+        <p id="demo">JavaScript can change HTML content.</p>
+    
+        <button type="button" id="clickBtn" class="btn">Click</button>
+        <button type="button" id="resetBtn">Reset</button>
+       
+    </body>
+</head>
