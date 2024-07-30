@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #modifyBox {
+            display: none;
+        }
+    </style>
     <script>
         var todoList = [
             {seq: 101, title: "학교오기", done: false},
@@ -12,6 +17,7 @@
             {seq: 104, title: "과제하기", done: false},
         ];
         var seqCnt = 105;
+        var currentEditSeq = null;
 
         function handleDelEvt(seq) {
             todoList = todoList.filter(function (todoObj) {
@@ -21,7 +27,12 @@
         }
 
         function editClickHandle(seq) {
-            console.log("editClickHandle for seq:", seq);
+            currentEditSeq = seq;
+            var todoObj = todoList.find(function (todo) {
+                return todo.seq === seq;
+            });
+            document.querySelector("#modifyBox").style.display = "block";
+            document.querySelector("#modifyTxt").value = todoObj.title;
         }
 
         function handleCheckBoxChange(seq) {
@@ -52,6 +63,7 @@
             var clickBtn = document.querySelector('#clickBtn');
             var searchBtn = document.querySelector('#searchBtn');
             var searchTxt = document.querySelector('#searchTxt');
+            var modifyBtn = document.querySelector('#modifyBtn');
 
             function handleEvent(event) {
                 todoList.push({seq: seqCnt++, title: memoTxt.value, done: false});
@@ -76,6 +88,18 @@
                 drawList(filteredTodoList);
             });
 
+            modifyBtn.addEventListener('click', function () {
+                var newTitle = document.querySelector("#modifyTxt").value;
+                todoList = todoList.map(function (todoObj) {
+                    if (todoObj.seq === currentEditSeq) {
+                        todoObj.title = newTitle;
+                    }
+                    return todoObj;
+                });
+                drawList();
+                document.querySelector("#modifyBox").style.display = "none";
+            });
+
             drawList();
         }
     </script>
@@ -89,6 +113,11 @@
     검색: <input type="text" id="searchTxt">
     <button id="searchBtn">검색</button>
     <hr>
+    <div id="modifyBox">
+        수정: <input type="text" id="modifyTxt"> 
+        <button id="modifyBtn">수정완료</button>
+        <hr>
+    </div>
     <table width="550" border="1">
         <thead>
             <tr>
