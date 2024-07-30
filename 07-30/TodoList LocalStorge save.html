@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #modifyBox {
+            display: none;
+        }
+    </style>
+    <script>
+        var todoList = [];
+        var seqCnt = 105;
+        var currentEditSeq = null;
+
+        function saveTodoList() {
+            localStorage.setItem("todoList", JSON.stringify(todoList));
+        }
+
+        function loadTodoList() {
+            var storedTodoList = localStorage.getItem("todoList");
+            if (storedTodoList) {
+                todoList = JSON.parse(storedTodoList);
+                seqCnt = todoList.length > 0 ? Math.max(...todoList.map(todo => todo.seq)) + 1 : 105;
+            }
+        }
+
+        function handleDelEvt(seq) {
+            todoList = todoList.filter(function (todoObj) {
+                return todoObj.seq !== seq;
+            });
+            saveTodoList(); // 변경 사항을 LocalStorage에 저장
+            drawList();
+        }
+
+        function editClickHandle(seq) {
+            currentEditSeq = seq;
+            var todoObj = todoList.find(function (todo) {
+                return todo.seq === seq;
+            });
+            document.querySelector("#modifyBox").style.display = "block";
+            document.querySelector("#modifyTxt").value = todoObj.title;
+        }
+
+        function handleCheckBoxChange(seq) {
+            todoList = todoList.map(function(todoObj) {
+                if (todoObj.seq === seq) {
+                    todoObj.done = !todoObj.done;
+                }
+                return todoObj;
+            });
+            saveTodoList(); // 변경 사항을 LocalStorage에 저장
+            drawList();
+        }
+
+        function drawList(filteredTodoList = todoList) {
+            var demo = document.querySelector('#demo');
+            demo.innerHTML = "";
+            filteredTodoList.forEach(function (todoObj) {
+                demo.innerHTML += `<tr align="center">
+                    <td><input type="checkbox" ${todoObj.done ? 'checked' : ''} onclick="handleCheckBoxChange(${todoObj.seq})"></td>
+                    <td style="text-decoration: ${todoObj.done ? 'line-through' : 'none'}">${todoObj.title}</td>
+                    <td><button onclick="editClickHandle(${todoObj.seq})">수정</button></td>
+                    <td><button onclick="handleDelEvt(${todoObj.seq})">삭제</button></td>
+                </tr>`;
+            });
+        }
+
+        window.onload = function () {
+            loadTodoList(); // 페이지 로드 시 LocalStorage에서 todoList를 불러옵니다.
+            drawList();
+
+            var memoTxt = document.getElementById('memoTxt');
+            var clickBtn = document.querySelector('#clickBtn');
+            var searchBtn = document.querySelector('#searchBtn');
+            var searchTxt = document.querySelector('#searchTxt');
+            var modifyBtn = document.querySelector('#modifyBtn');
+
+            function handleEvent(event) {
+                if (memoTxt.value.trim() === "") return; // 빈 값을 방지
+
+                todoList.push({seq: seqCnt++, title: memoTxt.value, done: false});
+                saveTodoList(); // 변경 사항을 LocalStorage에 저장
+                drawList();
+                memoTxt.value = "";
+                memoTxt.focus();
+            }
+
+            clickBtn.addEventListener('click', handleEvent);
+
+            memoTxt.onkeyup = function (event) {
+                if (event.keyCode === 13) {
+                    handleEvent(event);
+                }
+            }
+
+            searchBtn.addEventListener('click', function () {
+                var searchValue = searchTxt.value.toLowerCase();
+                var filteredTodoList = todoList.filter(function (todoObj) {
+                    return todoObj.title.toLowerCase().includes(searchValue);
+                });
+                drawList(filteredTodoList);
+            });
+
+            modifyBtn.addEventListener('click', function () {
+                var newTitle = document.querySelector("#modifyTxt").value;
+                todoList = todoList.map(function (todoObj) {
+                    if (todoObj.seq === currentEditSeq) {
+                        todoObj.title = newTitle;
+                    }
+                    return todoObj;
+                });
+                saveTodoList(); // 변경 사항을 LocalStorage에 저장
+                drawList();
+                document.querySelector("#modifyBox").style.display = "none";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Todo List</h1>
+    메모: <input type="text" id="memoTxt" value="hello">
+    <button type="button" id="clickBtn">Save</button>
+    <button type="button" id="resetBtn">Reset</button>
+    <hr>
+    검색: <input type="text" id="searchTxt">
+    <button id="searchBtn">검색</button>
+    <hr>
+    <div id="modifyBox">
+        수정: <input type="text" id="modifyTxt"> 
+        <button id="modifyBtn">수정완료</button>
+        <hr>
+    </div>
+    <table width="550" border="1">
+        <thead>
+            <tr>
+                <th>확인</th>
+                <th>할일</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody id="demo">
+        </tbody>
+    </table>
+</body>
+</html>
