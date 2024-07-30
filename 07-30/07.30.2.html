@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>계산기</title>
+    <script>
+        function calculate() {
+            const num1 = document.getElementsByClassName("n1")[0].value;
+            const num2 = document.querySelectorAll(".n2")[0].value;
+            const operator = document.getElementById("operator").value;
+            const resultArea = document.querySelector(".resultArea");
+
+            let result;
+
+            if(num1 < 0 || num2 < 0) {
+                alert("negative numbers not allowed");
+                return;
+            }
+
+            switch (operator) {
+                case '+':
+                    result = parseInt(num1) + parseInt(num2);
+                    break;
+                case '-':
+                    result = parseInt(num1) - parseInt(num2);
+                    break;
+                case '*':
+                    result = parseInt(num1) * parseInt(num2);
+                    break;
+                case '/':
+                    if (num2 === '0') {
+                        result = "Division by zero";
+                    } else {
+                        result = parseInt(num1) / parseInt(num2);
+                    }
+                    break;
+                default:
+                    result = "Invalid operation";
+            }
+            resultArea.textContent = result;
+        }
+
+        function resetFields() {
+            document.getElementsByClassName("n1")[0].value = "";
+            document.querySelectorAll(".n2")[0].value = "";
+            document.getElementById("operator").value = "+";
+            document.querySelector(".resultArea").textContent = "0";
+        }
+    </script>
+</head>
+<body>
+<h1>사칙연산 계산기</h1>
+    <fieldset>
+        <legend>Input values:</legend>
+        <input type="number" name="num1" class="n1">
+        <label for="operator">
+            <select id="operator" name="operator">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+        </label>
+        <input type="number" name="num2" class="n2">
+        <button class="resultBtn" onclick="calculate()">=</button>
+        <span class="resultArea">0</span>
+        <br>
+        <button class="resetBtn" onclick="resetFields()">초기화</button>
+        
+    </fieldset>
+</body>
+</html>
