@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pachinko</title>
     <style>
         #box {
             border: 5px solid navy;
@@ -27,7 +27,7 @@
             position: absolute;
             left: 0px;
             top: 0px;
-            border: 0px solid red;
+            border: 1px solid red;
             padding: 0;
             margin: 0;
         }
@@ -43,9 +43,7 @@
     </style>
 </head>
 <body>
-    <h1>햄버거하우스 게임</h1>
-    <button id="startBtn">START</button><button id="stopBtn">STOP</button>
-    <hr>
+    <h1>>파친코 게임</h1>
     <div id="box"></div>
 
 <script>
@@ -63,58 +61,25 @@
         }
         this.newBox.appendChild(this.elementUl);
         this.newBox.setAttribute("class", "newBox");
-        //this.start();
+        this.start();
         return this.newBox;
     }
-    Box.prototype.start = function(speed) {
-        // console.log("speed: ", speed)
+    Box.prototype.start = function() {
         this.elementUl.style.position = "absolute";
         // Element의 좌표 움지임 확인
-        this.elementUl.style.left = "0px";
-        this.elementUl.style.top = "0px";
-        this.y = 0;
-        this.intervalRef = setInterval(() => {
-            this.y -= 10;
-            // this가 어떻게 바뀌는 확인 필수.
-            //console.log(this);
-            this.elementUl.style.top = this.y + "px";
-            if(this.y <= -900) {
-                this.y = 0;
-            }
-        }, speed);
-    }
-    Box.prototype.stop = function() {
-        clearInterval(this.intervalRef);
-        console.log(Math.floor(this.y / 100)*100);
-        this.elementUl.style.top = Math.floor(this.y / 100)*100 + "px";
+        this.elementUl.style.left = "30px";
+        this.elementUl.style.top = "30px";
     }
 
     const divBox = document.querySelector("#box");
     
-    //const newBox = new Box().init("햄버거");
-    //divBox.appendChild(newBox);
+    const newBox = new Box().init("햄버거");
+    divBox.appendChild(newBox);
 
-    const boxArr = [
-        new Box(),new Box(),new Box(),
-        new Box(),new Box(),new Box(),
-        new Box(),new Box(),new Box()
-    ];
-    for(var i=0; i<boxArr.length; i++) {
-        const newBox = boxArr[i].init();
-        divBox.appendChild(newBox);
-    }
-
-    const startBtn = document.querySelector("#startBtn");
-    startBtn.addEventListener('click', function(event) {
-        boxArr.forEach(function(box){
-            box.start(Math.floor(5 + Math.random()*20));
-        })
-    });
-    stopBtn.addEventListener('click', function(event) {
-        boxArr.forEach(function(box){
-            box.stop();
-        })
-    });
+    // for(var i=0; i<9; i++) {
+    //     const newBox = new Box().init("햄버거");
+    //     divBox.appendChild(newBox);
+    // }
 </script>
 </body>
 </html>

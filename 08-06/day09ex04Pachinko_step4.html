@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pachinko</title>
+    <style>
+        #box {
+            border: 5px solid navy;
+            width: 300px;
+            height: 300px;
+            position: relative;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .cellBox {
+            position: relative;
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+        .cellBox ul {
+            display: block;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            border: 0px solid red;
+            padding: 0;
+            margin: 0;
+        }
+        .cellBox ul li {
+            border: 1px solid orange;
+            width: 100px;
+            height: 100px;
+            list-style: none;
+            text-align: center;
+            line-height: 100px;
+            box-sizing: border-box;
+        }
+        .stopButtons {
+            margin-bottom: 10px;
+        }
+        .stopButtons button {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>파친코 게임</h1>
+    <button id="startBtn">START</button><button id="stopBtn">STOP ALL</button>
+    <hr>
+    <div class="stopButtons">
+        <button class="stopColBtn" data-col="0">STOP 1</button>
+        <button class="stopColBtn" data-col="1">STOP 2</button>
+        <button class="stopColBtn" data-col="2">STOP 3</button>
+    </div>
+    <div id="box"></div>
+
+<script>
+    function Box() { }
+    Box.prototype.init = function() {
+        this.cellBox = document.createElement("div");
+        this.elementUl = document.createElement("ul");
+        for (var i = 0; i < 10; i++) {
+            this.elementLi = document.createElement("li");
+            this.elementLi.innerText = i;
+            this.elementUl.appendChild(this.elementLi);
+        }
+        this.cellBox.appendChild(this.elementUl);
+        this.cellBox.setAttribute("class", "cellBox");
+        return this.cellBox;
+    }
+    Box.prototype.start = function(speed) {
+        this.y = 0;
+        this.intervalRef = setInterval(() => {
+            this.y -= 10;
+            this.elementUl.style.top = this.y + "px";
+            if (this.y <= -900) {
+                this.y = 0;
+            }
+        }, speed);
+    }
+    Box.prototype.stop = function() {
+        clearInterval(this.intervalRef);
+        this.elementUl.style.top = Math.floor(this.y / 100) * 100 + "px";
+    }
+
+    const divBox = document.querySelector("#box");
+    const boxArr = [];
+    const rows = 3; // 행의 수
+    const cols = 3; // 열의 수
+
+    for (let i = 0; i < rows; i++) {
+        const rowDiv = document.createElement("div");
+        rowDiv.setAttribute("class", "row");
+        for (let j = 0; j < cols; j++) {
+            const box = new Box();
+            boxArr.push(box);
+            const newBox = box.init();
+            rowDiv.appendChild(newBox);
+        }
+        divBox.appendChild(rowDiv);
+    }
+
+    const startBtn = document.querySelector("#startBtn");
+    const stopBtn = document.querySelector("#stopBtn");
+    const stopColBtns = document.querySelectorAll(".stopColBtn");
+
+    startBtn.addEventListener('click', function (event) {
+        boxArr.forEach(function (box) {
+            box.start(Math.floor(5 + Math.random() * 20));
+        });
+    });
+
+    stopBtn.addEventListener('click', function (event) {
+        boxArr.forEach(function (box) {
+            box.stop();
+        });
+    });
+
+    stopColBtns.forEach(button => {
+        button.addEventListener('click', function () {
+            const col = parseInt(this.getAttribute("data-col"));
+            for (let i = col; i < boxArr.length; i += cols) {
+                boxArr[i].stop();
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -57,10 +57,10 @@
                     }
                 });
 
-                liTag.appendChild(checkBox);
-                liTag.appendChild(spanTag);
-                liTag.appendChild(delBtn);
-                listArea.appendChild(liTag);
+                listArea.appendChild(liTag); // ul태그 밑에 li태그 붙여주기
+                liTag.appendChild(checkBox); // li태그 밑에 checkbox태그 붙여주기
+                liTag.appendChild(spanTag);  // li태그 밑에 span태그 붙여주기
+                liTag.appendChild(delBtn);   // li태그 밑에 button태그 붙여주기 (삭제버튼)
             });
         }
 

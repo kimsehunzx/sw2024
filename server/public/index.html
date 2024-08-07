@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>홈페이지 만들기</title>
     <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
         header {
             border: 0px solid gray;
             width: 1000px;
@@ -17,12 +22,10 @@
             margin: auto;
             border: 0px solid red;
             padding: 0;
-            /* height 속성을 주지 않고 overflow 설정 */
-            /* height: 40px; */
             overflow: hidden;
             width: 600px;
         }
-        div ul li {
+        header ul li {
             width: 120px;
             height: 50px;
             border: 0px solid black;
@@ -32,69 +35,263 @@
             box-sizing: border-box;
             line-height: 50px;
             font-family: Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            color: white;
         }
         nav {
             border-bottom: 1px solid red;
         }
-        div ul li:hover {
+        header ul li:hover {
             border-bottom: 2px solid red;
             font-weight: bold;
             color: red;
         }
-        #main {
+        section {
+            display: none;
             width: 1000px;
             margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
         }
-        #main div {
-            height: 100vh;
-            text-align: center;
-            border: 1px solid orange;
+        .active {
+            display: block;
         }
-        div.sticky {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            padding: 5px;
-            background-color: white;
+        #gallery img {
+            max-width: 100%;
+            height: auto;
+        }
+        input, select, button {
+            color: black;
         }
     </style>
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('section');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        var todoList = [
+            {seq: 101, title: "학교오기", done: false},
+            {seq: 102, title: "포트폴리오 만들기", done: false},
+            {seq: 103, title: "팀 프로젝트 하기", done: false},
+            {seq: 104, title: "과제하기", done: false},
+        ];
+        var seqCnt = 105;
+        var currentEditSeq = null;
+
+        function handleDelEvt(seq) {
+            todoList = todoList.filter(function (todoObj) {
+                return todoObj.seq !== seq;
+            });
+            drawList();
+        }
+
+        function editClickHandle(seq) {
+            currentEditSeq = seq;
+            var todoObj = todoList.find(function (todo) {
+                return todo.seq === seq;
+            });
+            document.querySelector("#modifyBox").style.display = "block";
+            document.querySelector("#modifyTxt").value = todoObj.title;
+        }
+
+        function handleCheckBoxChange(seq) {
+            todoList = todoList.map(function(todoObj) {
+                if (todoObj.seq === seq) {
+                    todoObj.done = !todoObj.done;
+                }
+                return todoObj;
+            });
+            drawList();
+        }
+
+        function drawList(filteredTodoList = todoList) {
+            var demo = document.querySelector('#demo');
+            demo.innerHTML = "";
+            filteredTodoList.forEach(function (todoObj) {
+                demo.innerHTML += `<tr align="center">
+                    <td><input type="checkbox" ${todoObj.done ? 'checked' : ''} onclick="handleCheckBoxChange(${todoObj.seq})"></td>
+                    <td style="text-decoration: ${todoObj.done ? 'line-through' : 'none'}">${todoObj.title}</td>
+                    <td><button onclick="editClickHandle(${todoObj.seq})">수정</button></td>
+                    <td><button onclick="handleDelEvt(${todoObj.seq})">삭제</button></td>
+                </tr>`;
+            });
+        }
+
+        window.onload = function () {
+            var memoTxt = document.getElementById('memoTxt');
+            var clickBtn = document.querySelector('#clickBtn');
+            var searchBtn = document.querySelector('#searchBtn');
+            var searchTxt = document.querySelector('#searchTxt');
+            var modifyBtn = document.querySelector('#modifyBtn');
+
+            function handleEvent(event) {
+                todoList.push({seq: seqCnt++, title: memoTxt.value, done: false});
+                drawList();
+                memoTxt.value = "";
+                memoTxt.focus();
+            }
+
+            clickBtn.addEventListener('click', handleEvent);
+
+            memoTxt.onkeyup = function (event) {
+                if (event.keyCode === 13) {
+                    handleEvent(event);
+                }
+            }
+
+            searchBtn.addEventListener('click', function () {
+                var searchValue = searchTxt.value.toLowerCase();
+                var filteredTodoList = todoList.filter(function (todoObj) {
+                    return todoObj.title.toLowerCase().includes(searchValue);
+                });
+                drawList(filteredTodoList);
+            });
+
+            modifyBtn.addEventListener('click', function () {
+                var newTitle = document.querySelector("#modifyTxt").value;
+                todoList = todoList.map(function (todoObj) {
+                    if (todoObj.seq === currentEditSeq) {
+                        todoObj.title = newTitle;
+                    }
+                    return todoObj;
+                });
+                drawList();
+                document.querySelector("#modifyBox").style.display = "none";
+            });
+
+            drawList();
+        }
+
+        function loadFile(event) {
+            var imageContainer = document.getElementById('imageContainer');
+            var img = document.createElement('img');
+            img.src = URL.createObjectURL(event.target.files[0]);
+            imageContainer.appendChild(img);
+        }
+
+        function calculate() {
+            const num1 = document.getElementsByClassName("n1")[0].value;
+            const num2 = document.querySelectorAll(".n2")[0].value;
+            const operator = document.getElementById("operator").value;
+            const resultArea = document.querySelector(".resultArea");
+
+            let result;
+
+            if(num1 < 0 || num2 < 0) {
+                alert("negative numbers not allowed");
+                return;
+            }
+
+            switch (operator) {
+                case '+':
+                    result = parseInt(num1) + parseInt(num2);
+                    break;
+                case '-':
+                    result = parseInt(num1) - parseInt(num2);
+                    break;
+                case '*':
+                    result = parseInt(num1) * parseInt(num2);
+                    break;
+                case '/':
+                    if (num2 === '0') {
+                        result = "Division by zero";
+                    } else {
+                        result = parseInt(num1) / parseInt(num2);
+                    }
+                    break;
+                default:
+                    result = "Invalid operation";
+            }
+            resultArea.textContent = result;
+        }
+
+        function resetFields() {
+            document.getElementsByClassName("n1")[0].value = "";
+            document.querySelectorAll(".n2")[0].value = "";
+            document.getElementById("operator").value = "+";
+            document.querySelector(".resultArea").textContent = "0";
+        }
+    </script>
 </head>
 <body>
     <header>
-        <h1>범준샘의 소프트웨어 공작실</h1>
-    </header>
-    <div class="sticky">
+        <h1>홈페이지 만들기</h1>
         <nav>
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#profile">Profile</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#lecture">Lecture</a></li>
-                <li><a href="#shop">Shop</a></li>
+                <li onclick="showSection('home')">Home</li>
+                <li onclick="showSection('profile')">Profile</li>
+                <li onclick="showSection('gallery')">Gallery</li>
+                <li onclick="showSection('todolist')">TodoList</li>
+                <li onclick="showSection('calculator')">Calculator</li>
             </ul>
         </nav>
-    </div>
-    <div id="main">
-        <div id="home">
-            <br><br>
-            <h3>오신것을 환영합니다</h3>
+    </header>
+    <section id="home" class="active">
+        <h2>홈페이지 만들기</h2>
+        <p>안녕하세요.</p>
+    </section>
+    <section id="profile">
+        <h2>Profile</h2>
+        <p>경일대학교 20181723 김세훈</p>
+        <a href="https://github.com/kimsehunzx/sw2024" target="_blank" style="color: white;">Github</a><br/><br/>
+    </section>
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <input type="file" id="upload" accept="image/*" onchange="loadFile(event)" style="color: white;">
+        <div id="imageContainer"></div>
+    </section>
+    <section id="todolist">
+        <h2>Todo List</h2>
+        <input type="text" id="memoTxt" value="" style="color: black;">
+        <button type="button" id="clickBtn" style="color: black;">Save</button>
+        <button type="button" id="resetBtn" style="color: black;">Reset</button>
+        <hr>
+        검색: <input type="text" id="searchTxt" style="color: black;">
+        <button id="searchBtn" style="color: black;">검색</button>
+        <hr>
+        수정: <div id="modifyBox" style="color: black;">
+             <input type="text" id="modifyTxt" style="color: black;"> 
+            <button id="modifyBtn" style="color: black;">수정완료</button>
+            <hr>
         </div>
-        <div id="profile">
-            <br><br>
-            <h3>Profile</h3>
-        </div>
-        <div id="gallery">
-            <br><br>
-            <h3>Gallery</h3>
-        </div>
-        <div id="lecture">
-            <br><br>
-            <h3>Lecture</h3>
-        </div>
-        <div id="shop">
-            <br><br>
-            <h3>Shop</h3>
-        </div>
-    </div>
+        <table width="550" border="1">
+            <thead>
+                <tr>
+                    <th>확인</th>
+                    <div class="
+                    "></div>
+                    <th>할일</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="demo">
+            </tbody>
+        </table>
+    </section>
+    <section id="calculator">
+        <h2>Calculator</h2>
+        <fieldset>
+            <legend>Input values:</legend>
+            <input type="number" name="num1" class="n1" style="color: black;">
+            <label for="operator">
+                <select id="operator" name="operator" style="color: black;">
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">*</option>
+                    <option value="/">/</option>
+                </select>
+            </label>
+            <input type="number" name="num2" class="n2" style="color: black;">
+            <button class="resultBtn" onclick="calculate()" style="color: black;">=</button>
+            <span class="resultArea">0</span>
+            <br>
+            <button class="resetBtn" onclick="resetFields()" style="color: black;">초기화</button>
+        </fieldset>
+    </section>
 </body>
 </html>
