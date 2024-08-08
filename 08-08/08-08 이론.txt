@@ -1,0 +1,15 @@
+요소의 속성 조작: 
+공통적으로 setter와 getter의 기능을 모두 가짐. 인자를 하나면 getter, 두개면 setter
+- text()메서드를 사용하여 요소의 텍스트 내용을 변경 innerText 속성
+- html() 메서드를 사용하여 요소의 HTML 내용을 변경 innerHTML 속성
+- attr() 메서드를 사용하여 요소의 속성 값을 가져오거나 설정 setAttribute() 메서드
+- val() 메서드를 이용해서 input 요소의 값을 가져오거나 설정 value 속성
+- css() 메서드를 사용해서 요소의 스타일을 설정하거나 값을 가져온다 style 속성
+- append() 메서드를 이용해서 DOM요소 추가
+이벤트 핸들링:
+- on() 메서드를 사용하여 이벤트를 등록
+- 또는 bind() 메서드를 사용하여 이벤트를 등록
+- click(), change(), keydown() 등과 같은 많이 사용하는 이벤트는 메서드가 있습니다.
+기타:
+- hide(), show(), toggle() 메서드를 사용하여 요소를 숨기거나 보이게 합니다.
+- addClass(),`removeClass(), toggleClass() 메서드로 요소의 클래스를 추가 또는 제거합니다.

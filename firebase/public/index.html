@@ -172,49 +172,6 @@
             img.src = URL.createObjectURL(event.target.files[0]);
             imageContainer.appendChild(img);
         }
-
-        function calculate() {
-            const num1 = document.getElementsByClassName("n1")[0].value;
-            const num2 = document.querySelectorAll(".n2")[0].value;
-            const operator = document.getElementById("operator").value;
-            const resultArea = document.querySelector(".resultArea");
-
-            let result;
-
-            if(num1 < 0 || num2 < 0) {
-                alert("negative numbers not allowed");
-                return;
-            }
-
-            switch (operator) {
-                case '+':
-                    result = parseInt(num1) + parseInt(num2);
-                    break;
-                case '-':
-                    result = parseInt(num1) - parseInt(num2);
-                    break;
-                case '*':
-                    result = parseInt(num1) * parseInt(num2);
-                    break;
-                case '/':
-                    if (num2 === '0') {
-                        result = "Division by zero";
-                    } else {
-                        result = parseInt(num1) / parseInt(num2);
-                    }
-                    break;
-                default:
-                    result = "Invalid operation";
-            }
-            resultArea.textContent = result;
-        }
-
-        function resetFields() {
-            document.getElementsByClassName("n1")[0].value = "";
-            document.querySelectorAll(".n2")[0].value = "";
-            document.getElementById("operator").value = "+";
-            document.querySelector(".resultArea").textContent = "0";
-        }
     </script>
 </head>
 <body>
@@ -226,7 +183,7 @@
                 <li onclick="showSection('profile')">Profile</li>
                 <li onclick="showSection('gallery')">Gallery</li>
                 <li onclick="showSection('todolist')">TodoList</li>
-                <li onclick="showSection('calculator')">Calculator</li>
+                <li onclick="showSection('pachinko')">Pachinko</li>
             </ul>
         </nav>
     </header>
@@ -236,7 +193,7 @@
     </section>
     <section id="profile">
         <h2>Profile</h2>
-        <p>경일대학교 20181723 김세훈</p>
+        <p>20181723 김세훈</p>
         <a href="https://github.com/kimsehunzx/sw2024" target="_blank" style="color: white;">Github</a><br/><br/>
     </section>
     <section id="gallery">
@@ -262,23 +219,7 @@
             <thead>
                 <tr>
                     <th>확인</th>
-                    0
-                    <div class="
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    "></div>
+                    <div class=""></div>
                     <th>할일</th>
                     <th>수정</th>
                     <th>삭제</th>
@@ -288,25 +229,242 @@
             </tbody>
         </table>
     </section>
-    <section id="calculator">
-        <h2>Calculator</h2>
-        <fieldset>
-            <legend>Input values:</legend>
-            <input type="number" name="num1" class="n1" style="color: black;">
-            <label for="operator">
-                <select id="operator" name="operator" style="color: black;">
-                    <option value="+">+</option>
-                    <option value="-">-</option>
-                    <option value="*">*</option>
-                    <option value="/">/</option>
-                </select>
-            </label>
-            <input type="number" name="num2" class="n2" style="color: black;">
-            <button class="resultBtn" onclick="calculate()" style="color: black;">=</button>
-            <span class="resultArea">0</span>
-            <br>
-            <button class="resetBtn" onclick="resetFields()" style="color: black;">초기화</button>
-        </fieldset>
+    <section id="pachinko">
+        <h2>파친코 게임</h2>
+        <img src="C:\Users\kiusw\Documents\GitHub\sw2024\08-07\images\jackpot.png" alt="Game Image" class="game-image">
+        <div id="coinDisplay">보유 코인: 100</div> 
+
+        <div class="button-container">
+            <button id="chargeBtn">코인 충전 (+50)</button>
+            <button id="startBtn">START ALL</button>
+            <button id="stopBtn">STOP ALL</button>
+        </div>
+
+        <hr>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center; /* Center all text and elements */
+            }
+            #box {
+                border: 5px solid yellow;
+                width: 300px;
+                height: 300px;
+                position: relative;
+                margin: 0 auto; /* Center the box */
+            }
+            .row {
+                display: flex;
+                justify-content: space-between;
+            }
+            .cellBox {
+                position: relative;
+                box-sizing: border-box;
+                width: 100px;
+                height: 100px;
+                border: 1px solid black;
+                overflow: hidden;
+            }
+            .cellBox.middle {
+                border-color: black;
+            }
+            .cellBox ul {
+                display: block;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                border: 0px solid red;
+                padding: 0;
+                margin: 0;
+            }
+            .cellBox ul li {
+                border: 1px solid orange;
+                width: 100px;
+                height: 100px;
+                list-style: none;
+                text-align: center;
+                line-height: 100px;
+                box-sizing: border-box;
+                font-size: 2em; /* Increase font size for better visibility */
+            }
+            .stopButtons {
+                margin-bottom: 10px;
+            }
+            .stopButtons button {
+                width: 100px;
+            }
+            #coinDisplay {
+                margin-bottom: 10px;
+            }
+            .game-image {
+                display: block;
+                margin: 20px auto; /* Center the image */
+                width: 300px; /* Set the image width to match the box */
+                height: auto; /* Maintain aspect ratio */
+            }
+            .button-container {
+                margin: 20px 0; /* Add space above and below the buttons */
+                text-align: center; /* Center the buttons horizontally */
+            }
+            .button-container button {
+                margin: 0 10px; /* Add space between buttons */
+                width: 120px; /* Set button width */
+            }
+        </style>
+        <div class="stopButtons">
+            <button class="stopColBtn" data-col="0">STOP 1</button>
+            <button class="stopColBtn" data-col="1">STOP 2</button>
+            <button class="stopColBtn" data-col="2">STOP 3</button>
+        </div>
+        <div id="box"></div>
+
+        <audio id="rouletteSound" src="roulette-sound.mp3" preload="auto"></audio>
+        <audio id="successSound" src="success-sound.mp3" preload="auto"></audio>
+
+        <script>
+            // 과일 이모지 배열
+            const emojis = ["🍎", "🍌", "🍒", "🍇", "🍉", "🍓", "🍑", "🍊", "🍍", "🥭"];
+
+            function Box() { }
+            Box.prototype.init = function() {
+                this.cellBox = document.createElement("div");
+                this.elementUl = document.createElement("ul");
+                this.emojis = [];
+                for (let i = 0; i < 10; i++) {
+                    this.elementLi = document.createElement("li");
+                    this.elementLi.innerText = emojis[i]; // 이모지로 설정
+                    this.elementUl.appendChild(this.elementLi);
+                    this.emojis.push(emojis[i]); 
+                }
+                this.cellBox.appendChild(this.elementUl);
+                this.cellBox.setAttribute("class", "cellBox");
+                this.setRandomPosition(); // 랜덤 위치 설정
+                return this.cellBox;
+            }
+            Box.prototype.start = function(speed) {
+                this.intervalRef = setInterval(() => {
+                    this.y -= 10;
+                    this.elementUl.style.top = this.y + "px";
+                    if (this.y <= -900) {
+                        this.y = 0;
+                    }
+                }, speed);
+            }
+            Box.prototype.stop = function() {
+                clearInterval(this.intervalRef);
+                this.elementUl.style.top = Math.floor(this.y / 100) * 100 + "px";
+            
+                const index = Math.abs(Math.floor(this.y / 100) % 10);
+                return this.emojis[index];
+            }
+            Box.prototype.setRandomPosition = function() {
+                this.y = -Math.floor(Math.random() * 10) * 100;
+                this.elementUl.style.top = this.y + "px";
+            }
+
+            const divBox = document.querySelector("#box");
+            const boxArr = [];
+            const rows = 3; // 행의 수
+            const cols = 3; // 열의 수
+
+            for (let i = 0; i < rows; i++) {
+                const rowDiv = document.createElement("div");
+                rowDiv.setAttribute("class", "row");
+                for (let j = 0; j < cols; j++) {
+                    const box = new Box();
+                    boxArr.push(box);
+                    const newBox = box.init();
+                    if (i === 1) {
+                        newBox.classList.add("middle");
+                    }
+                    rowDiv.appendChild(newBox);
+                }
+                divBox.appendChild(rowDiv);
+            }
+
+            const startBtn = document.querySelector("#startBtn");
+            const stopBtn = document.querySelector("#stopBtn");
+            const stopColBtns = document.querySelectorAll(".stopColBtn");
+            const rouletteSound = document.querySelector("#rouletteSound");
+            const successSound = document.querySelector("#successSound");
+            const coinDisplay = document.querySelector("#coinDisplay");
+
+            let coins = 100; 
+
+            function playSound(sound) {
+                if (!sound.paused) {
+                    sound.currentTime = 0;
+                }
+                sound.play();
+            }
+
+            function updateCoinDisplay() {
+                coinDisplay.textContent = `보유 코인: ${coins}`;
+            }
+
+            function startAll() {
+                if (coins < 3) {
+                    alert("코인이 부족합니다!");
+                    return;
+                }
+                coins -= 3; // 게임 시작시 3개 차감
+                updateCoinDisplay();
+                boxArr.forEach(function (box) {
+                    box.start(Math.floor(5 + Math.random() * 20));
+                });
+                playSound(rouletteSound);
+            }
+
+            function stopAll() {
+                boxArr.forEach(function (box) {
+                    if (box.intervalRef) {
+                        box.stop(); // 
+                    }
+                });
+                rouletteSound.pause(); 
+                rouletteSound.currentTime = 0; 
+                checkSuccess(); // 
+            }
+
+            function checkSuccess() {
+                const middleBoxes = boxArr.filter((box, index) => index >= cols && index < 2 * cols);
+                const values = middleBoxes.map(box => box.stop());
+                const valueSet = new Set(values);
+
+                if (valueSet.size === 1 && middleBoxes.length > 0) {
+                    coins += 90; // 맞추면 90개 추가
+                    updateCoinDisplay();
+                    playSound(successSound);
+                }
+            }
+
+            startBtn.addEventListener('click', function () {
+                startAll();
+            });
+
+            stopBtn.addEventListener('click', function () {
+                stopAll();
+            });
+
+            stopColBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const col = parseInt(this.getAttribute("data-col"));
+                    for (let i = col; i < boxArr.length; i += cols) {
+                        boxArr[i].stop();
+                    }
+                    if (boxArr.every(box => !box.intervalRef)) { 
+                        stopAll();
+                    }
+                });
+            });
+
+            document.querySelector("#chargeBtn").addEventListener('click', function() {
+                coins += 50; //코인 50개 충전
+                updateCoinDisplay();
+            });
+
+            updateCoinDisplay(); 
+        </script>
     </section>
 </body>
 </html>
