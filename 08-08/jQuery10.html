@@ -7,7 +7,7 @@
 <body>
   <h2>Custom jQuery Plugin Example</h2>
   <p>This is a paragraph with some text.</p>
-   <p>This is a paragraph with some text.</p>
+	<p>This is a paragraph with some text.</p>
   <button id="btn">p태그 스타일 변경</button>
   <hr>
 
@@ -28,20 +28,20 @@
       this.each(function(i, dom) {
         if(i%2 ===0){
             $(this).css({
-           backgroundColor: bgcolor?bgcolor:"yellow",
-           fontWeight: 'bold'
-         });
+	        backgroundColor: bgcolor?bgcolor:"yellow",
+	        fontWeight: 'bold'
+	      });
         }
       });
     };
 
     $.fn.myFn2= function() {
-        this.colors = ['red','orange','blue','pink','green','brown','gray'];
+        this.colors = ['red','orange','blue','pink','green'];
         console.log(this.colors);
         //var THIS = this;
         this.each((i, dom) => {
             $(dom).css({
-                backgroundColor: this.colors[i],
+                backgroundColor: this.colors[i % this.colors.length],
                 fontWeight: 'bold'
             });
         });
