@@ -63,6 +63,22 @@
         input, select, button {
             color: black;
         }
+        /* 수정된 스타일 */
+        #todolist input[type="text"], #todolist button {
+            display: inline-block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        #memoTxt, #clickBtn, #searchTxt, #searchBtn, #modifyTxt, #modifyBtn {
+            text-align: left;
+            display: inline-block;
+        }
+        #demo tr td {
+            text-align: center;
+        }
+        #demo tr td:first-child {
+            text-align: left;
+        }
     </style>
     <script>
         function showSection(sectionId) {
@@ -113,7 +129,7 @@
             demo.innerHTML = "";
             filteredTodoList.forEach(function (todoObj) {
                 demo.innerHTML += `<tr align="center">
-                    <td><input type="checkbox" ${todoObj.done ? 'checked' : ''} onclick="handleCheckBoxChange(${todoObj.seq})"></td>
+                    <td style="text-align: left;"><input type="checkbox" ${todoObj.done ? 'checked' : ''} onclick="handleCheckBoxChange(${todoObj.seq})"></td>
                     <td style="text-decoration: ${todoObj.done ? 'line-through' : 'none'}">${todoObj.title}</td>
                     <td><button onclick="editClickHandle(${todoObj.seq})">수정</button></td>
                     <td><button onclick="handleDelEvt(${todoObj.seq})">삭제</button></td>
@@ -198,19 +214,26 @@
     </section>
     <section id="gallery">
         <h2>Gallery</h2>
-        <input type="file" id="upload" accept="image/*" onchange="loadFile(event)" style="color: white;">
+        <img src="img/img01.png" alt="구름 사진1">
+        <img src="img/img02.png" alt="구름 사진2">
+        <img src="img/img03.png" alt="구름 사진3">
+        
         <div id="imageContainer"></div>
     </section>
     <section id="todolist">
         <h2>Todo List</h2>
-        <input type="text" id="memoTxt" value="" style="color: black;">
-        <button type="button" id="clickBtn" style="color: black;">Save</button>
-        <button type="button" id="resetBtn" style="color: black;">Reset</button>
+        <div style="text-align: left;">
+            할일: <input type="text" id="memoTxt" value="" style="color: black;">
+            <button type="button" id="clickBtn" style="color: black;">저장</button>
+        </div>
+        
         <hr>
-        검색: <input type="text" id="searchTxt" style="color: black;">
-        <button id="searchBtn" style="color: black;">검색</button>
+        <div style="text-align: left;">
+            검색: <input type="text" id="searchTxt" style="color: black;">
+            <button id="searchBtn" style="color: black;">검색</button>
+        </div>
         <hr>
-        <div id="modifyBox" style="color: black;">
+        <div id="modifyBox" style="text-align: left;">
             수정: <input type="text" id="modifyTxt" style="color: black;"> 
             <button id="modifyBtn" style="color: black;">수정완료</button>
             <hr>
@@ -231,7 +254,6 @@
     </section>
     <section id="pachinko">
         <h2>파친코 게임</h2>
-        <img src="/public/image/jackpot.png" alt="Game Image" class="game-image">
         <div id="coinDisplay">보유 코인: 100</div> 
 
         <div class="button-container">
@@ -295,12 +317,6 @@
             }
             #coinDisplay {
                 margin-bottom: 10px;
-            }
-            .game-image {
-                display: block;
-                margin: 20px auto; /* Center the image */
-                width: 300px; /* Set the image width to match the box */
-                height: auto; /* Maintain aspect ratio */
             }
             .button-container {
                 margin: 20px 0; /* Add space above and below the buttons */
